@@ -1,0 +1,50 @@
+title: CSV Spec
+description: >
+  An attempt to describe CSV-like formats in a obvious and easy to understand
+  way, complete with code examples aimed at developers.
+author: Jim Myhrberg
+hostname: csv-spec.org
+url: https://csv-spec.org
+repo_url: https://github.com/parsecsv/csv-spec
+
+current_version: 0.9.0-draft.1
+versions:
+  - 0.9.0-draft.1
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - Rakefile
+  - README.md
+
+update:
+  body_tpl: |
+    ---
+    title: {{title}}
+    version: {{version}}
+    ---
+    {{content}}
+  url_tpl: "https://github.com/parsecsv/csv-spec/raw/{{version}}/{{file}}"
+  output_dir: "spec"
+  files:
+    document: csv-spec.md
+
+plugins:
+  - jekyll-assets
+  - jekyll-pants
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll-tidy
+
+defaults:
+  -
+    scope:
+      path: ""
+    values:
+      layout: "default"
+
+assets:
+  digest: true
+  compress:
+    css: true
+    js: true

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:700,300|Open+Sans:400italic,700italic,400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+    <link rel="stylesheet" href="https:////maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link type="text/css" rel="stylesheet" href="/assets/main-5df19fc13b2a391dcab974f0584820f95eecdd416e60b99950f2058c61a2e99f.css">
+    <!-- Begin Jekyll SEO tag v2.2.3 -->
+    <title>CSV Spec 0.9.0-draft.1 | CSV Spec</title>
+    <meta property="og:title" content="CSV Spec 0.9.0-draft.1" />
+    <meta name="author" content="Jim Myhrberg" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="description" content="An attempt to describe CSV-like formats in a obvious and easy to understand way, complete with code examples aimed at developers." />
+    <meta property="og:description" content="An attempt to describe CSV-like formats in a obvious and easy to understand way, complete with code examples aimed at developers." />
+    <link rel="canonical" href="https://csv-spec.org/" />
+    <meta property="og:url" content="https://csv-spec.org/" />
+    <meta property="og:site_name" content="CSV Spec" />
+    <script type="application/ld+json">
+      {"@context":"http://schema.org","@type":"WebSite","name":"CSV Spec","headline":"CSV Spec 0.9.0-draft.1","author":{"@type":"Person","name":"Jim Myhrberg"},"description":"An attempt to describe CSV-like formats in a obvious and easy to understand way, complete with code examples aimed at developers.","url":"https://csv-spec.org/"}
+    </script>
+    <!-- End Jekyll SEO tag -->
+  </head>
+  <body>
+    <div id="layout">
+      <a href="#menu" id="menuLink" class="menu-link">
+        <span></span>
+      </a>
+      <div id="menu">
+        <div class="pure-menu">
+          <ul class="pure-menu-list">
+            <li class="pure-menu-item">
+              <div class="pure-menu-label">Versions:</div>
+            </li>
+            <li class="pure-menu-item version-0.9.0-draft.1 pure-menu-selected">
+              <a href="/spec/0.9.0-draft.1.html" class="pure-menu-link">0.9.0-draft.1</a>
+            </li>
+          </ul>
+        </div>
+        <div class="links">
+          <a href="https://github.com/parsecsv/csv-spec">
+            <i class="fa fa-github" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+      <div id="main">
+        <div class="content">
+          <h1 id="csv-spec-090-draft1">CSV Spec 0.9.0-draft.1</h1>
+          <h2 id="summary">Summary</h2>
+          <p>CSV is not a file format, it is a loose set of guidelines of how to structure
+            tabular data into a plain text string. As such there’s an endless amount of
+            <code class="highlighter-rouge">*.csv</code> files floating around which are highly incompatible with each other. The
+            closest thing there is to a specification is <a href="http://tools.ietf.org/html/rfc4180">RFC
+              4180</a>.</p>
+          <h2 id="goals">Goals</h2>
+          <p>This project is an attempt to summarize RFC 4180 and the information in the
+            <a href="http://en.wikipedia.org/wiki/Comma-separated_values">Comma-separated values
+              (CSV)</a> Wikipedia article
+            into a easy to understand format. The spec will also take into account that the
+            comma (<code class="highlighter-rouge">,</code>) character is not the only character used as a field
+            delimiter. Semi-colons (<code class="highlighter-rouge">;</code>), tabs (<code class="highlighter-rouge">\t</code>), and more are popular field delimiter
+            characters. As such the specification will more accurately be describing a
+            CSV-like structured data format.</p>
+          <p>We will also provide input/output test files that CSV parser/writer software
+            libraries can use to validate if they properly adhere to the rules laid out in
+            this specification. And if possible we will even try to provide code snippets in
+            various languages that attempts to automatically determine the delimiter
+            character used in any given input CSV-like formatted file/data.</p>
+          <h2 id="roadmap">Roadmap</h2>
+          <ol>
+            <li>Write up core specification rules. <em>[in-progress]</em></li>
+            <li>Create input/output test files covering all rules in the specification.</li>
+            <li>Create website for <a href="http://csv-spec.org/">csv-spec.org</a>.</li>
+            <li>Create linting tool as a NPM module, allowing easy validation of CSV data
+              both client-side in a web browser, and server side via a command line tool.</li>
+            <li>Create automatic delimiter character detection code snippets in various
+              programming languages which CSV parser developers can freely use to enhance
+              their libraries.</li>
+          </ol>
+          <h2 id="terminology">Terminology</h2>
+          <ul>
+            <li><strong>Field</strong> — A singular String value within a record.</li>
+            <li><strong>Record</strong> (or <strong>Row</strong>) — A collection of fields. This is often referred to as
+              a “line”, but a single record can span multiple text lines if a field within
+              it contains one or more line breaks.</li>
+            <li><strong>Delimiter</strong> — The character used to separate fields withing a row. Commonly
+              this will be a comma (<code class="highlighter-rouge">,</code>), but semi-colons (<code class="highlighter-rouge">;</code>) or tabs (<code class="highlighter-rouge">\t</code>) are two other
+              popular delimiter characters.</li>
+            <li><strong>Header</strong> — The first row is often used to contain the column names for all
+              remaining rows. Header names would be used as key names when CSV data is
+              converted to JSON for example.</li>
+            <li><strong>Line Break</strong> — Line breaks in CSV files can be CRLF (<code class="highlighter-rouge">\r\n</code>), LF (<code class="highlighter-rouge">\n</code>), and
+              even in rare cases CR (<code class="highlighter-rouge">\r</code>).</li>
+            <li><strong>LF, CR, and CRLF</strong> — Different types of line breaks, typically determined by
+              the OS. Linux, OSX, and other *NIX operating systems generally use a line feed
+              (LF or <code class="highlighter-rouge">\n</code>) character. Windows uses a carriage return (CR or <code class="highlighter-rouge">\r</code>) and a line
+              feed character, effectively “CRLF” (<code class="highlighter-rouge">\r\n</code>).</li>
+          </ul>
+          <h2 id="csv-format-specification">CSV Format Specification</h2>
+          <p>The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”,
+            “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL” in this document are to be
+            interpreted as described in <a href="https://tools.ietf.org/html/rfc2119">RFC 2119</a>.</p>
+          <p>These rules are mostly based on the corresponding section from <a href="http://tools.ietf.org/html/rfc4180#section-2">RFC
+              4180</a>, with minor changes,
+            clarifications and improved examples.</p>
+          <ol>
+            <li>
+              <p>Each record starts at the beginning of its own line, and ends with a line
+                break (shown as <code class="highlighter-rouge">¬</code>).</p>
+              <p>CSV:</p>
+              <pre><code class="language-csv">aaa,bbb,ccc¬
+xxx,yyy,zzz¬
+</code></pre>
+              <p>JSON:</p>
+              <div class="language-json highlighter-rouge">
+                <pre class="highlight"><code><span class="p">[</span><span class="w"> </span><span class="p">[</span><span class="s2">"aaa"</span><span class="p">,</span><span class="w"> </span><span class="s2">"bbb"</span><span class="p">,</span><span class="w"> </span><span class="s2">"ccc"</span><span class="p">],</span><span class="w">
+  </span><span class="p">[</span><span class="s2">"xxx"</span><span class="p">,</span><span class="w"> </span><span class="s2">"yyy"</span><span class="p">,</span><span class="w"> </span><span class="s2">"zzz"</span><span class="p">]</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span></code></pre>
+              </div>
+            </li>
+            <li>
+              <p>Though it is RECOMMENDED, the last record in a file is not required to have a
+                ending line break.</p>
+              <p>CSV:</p>
+              <pre><code class="language-csv">aaa,bbb,ccc¬
+xxx,yyy,zzz
+</code></pre>
+              <p>JSON:</p>
+              <div class="language-json highlighter-rouge">
+                <pre class="highlight"><code><span class="p">[</span><span class="w"> </span><span class="p">[</span><span class="s2">"aaa"</span><span class="p">,</span><span class="w"> </span><span class="s2">"bbb"</span><span class="p">,</span><span class="w"> </span><span class="s2">"ccc"</span><span class="p">],</span><span class="w">
+  </span><span class="p">[</span><span class="s2">"xxx"</span><span class="p">,</span><span class="w"> </span><span class="s2">"yyy"</span><span class="p">,</span><span class="w"> </span><span class="s2">"zzz"</span><span class="p">]</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span></code></pre>
+              </div>
+            </li>
+            <li>
+              <p>There may be an OPTIONAL header line appearing as the first line of the file
+                with the same format as normal records. This header will contain names
+                corresponding to the fields in the file, and MUST contain the same number of
+                fields as the records in the rest of the file.</p>
+              <p>CSV:</p>
+              <pre><code class="language-csv">field_1,field_2,field_3¬
+aaa,bbb,ccc¬
+xxx,yyy,zzz¬
+</code></pre>
+              <p>JSON (ignoring headers):</p>
+              <div class="language-json highlighter-rouge">
+                <pre class="highlight"><code><span class="p">[</span><span class="w"> </span><span class="p">[</span><span class="s2">"field_1"</span><span class="p">,</span><span class="w"> </span><span class="s2">"field_2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"field_3"</span><span class="p">],</span><span class="w">
+  </span><span class="p">[</span><span class="s2">"aaa"</span><span class="p">,</span><span class="w"> </span><span class="s2">"bbb"</span><span class="p">,</span><span class="w"> </span><span class="s2">"ccc"</span><span class="p">],</span><span class="w">
+  </span><span class="p">[</span><span class="s2">"xxx"</span><span class="p">,</span><span class="w"> </span><span class="s2">"yyy"</span><span class="p">,</span><span class="w"> </span><span class="s2">"zzz"</span><span class="p">]</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span></code></pre>
+              </div>
+              <p>JSON (using headers):</p>
+              <div class="language-json highlighter-rouge">
+                <pre class="highlight"><code><span class="p">[</span><span class="w"> </span><span class="p">{</span><span class="nt">"field_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaa"</span><span class="p">,</span><span class="w"> </span><span class="nt">"field_2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bbb"</span><span class="p">,</span><span class="w"> </span><span class="nt">"field_3"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ccc"</span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="nt">"field_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xxx"</span><span class="p">,</span><span class="w"> </span><span class="nt">"field_2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yyy"</span><span class="p">,</span><span class="w"> </span><span class="nt">"field_3"</span><span class="p">:</span><span class="w"> </span><span class="s2">"zzz"</span><span class="p">}</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span></code></pre>
+              </div>
+            </li>
+            <li>
+              <p>Within each record and the OPTIONAL header, there may be one or more fields,
+                separated by a delimiter (normally a comma). Each record MUST contain the
+                same number of fields throughout the file.</p>
+              <p>CSV (invalid):</p>
+              <pre><code class="language-csv">aaa,bbb,ccc¬
+111,222,333,444¬
+xxx,yyy,zzz¬
+</code></pre>
+            </li>
+            <li>
+              <p>The last field in a record MUST NOT be followed by a comma. This results in a
+                additional field with nothing in it.</p>
+              <p>CSV:</p>
+              <pre><code class="language-csv">aaa,bbb,ccc,¬
+xxx,yyy,zzz,¬
+</code></pre>
+              <p>JSON:</p>
+              <div class="language-json highlighter-rouge">
+                <pre class="highlight"><code><span class="p">[</span><span class="w"> </span><span class="p">[</span><span class="s2">"aaa"</span><span class="p">,</span><span class="w"> </span><span class="s2">"bbb"</span><span class="p">,</span><span class="w"> </span><span class="s2">"ccc"</span><span class="p">,</span><span class="w"> </span><span class="s2">""</span><span class="p">],</span><span class="w">
+  </span><span class="p">[</span><span class="s2">"xxx"</span><span class="p">,</span><span class="w"> </span><span class="s2">"yyy"</span><span class="p">,</span><span class="w"> </span><span class="s2">"zzz"</span><span class="p">,</span><span class="w"> </span><span class="s2">""</span><span class="p">]</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span></code></pre>
+              </div>
+            </li>
+            <li>
+              <p>Spaces are considered part of a field and MUST NOT be ignored.</p>
+              <p>CSV:</p>
+              <pre><code class="language-csv">aaa ,  bbb , ccc¬
+ xxx, yyy  ,zzz ¬
+</code></pre>
+              <p>JSON:</p>
+              <div class="language-json highlighter-rouge">
+                <pre class="highlight"><code><span class="p">[</span><span class="w"> </span><span class="p">[</span><span class="s2">"aaa "</span><span class="p">,</span><span class="w"> </span><span class="s2">"  bbb "</span><span class="p">,</span><span class="w"> </span><span class="s2">" ccc"</span><span class="p">],</span><span class="w">
+  </span><span class="p">[</span><span class="s2">" xxx"</span><span class="p">,</span><span class="w"> </span><span class="s2">" yyy  "</span><span class="p">,</span><span class="w"> </span><span class="s2">"zzz "</span><span class="p">]</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span></code></pre>
+              </div>
+            </li>
+            <li>
+              <p>Fields containing line breaks (CRLF, LF, or CR), double quotes, or the
+                delimiter character (normally a comma) MUST be enclosed in double-quotes.</p>
+              <p>CSV:</p>
+              <pre><code class="language-csv">aaa,"b¬
+bb",ccc¬
+xxx,"y, yy",zzz¬
+</code></pre>
+              <p>JSON:</p>
+              <div class="language-json highlighter-rouge">
+                <pre class="highlight"><code><span class="p">[</span><span class="w"> </span><span class="p">[</span><span class="s2">"aaa"</span><span class="p">,</span><span class="w"> </span><span class="s2">"b\r\nbb"</span><span class="p">,</span><span class="w"> </span><span class="s2">"ccc"</span><span class="p">],</span><span class="w">
+  </span><span class="p">[</span><span class="s2">"xxx"</span><span class="p">,</span><span class="w"> </span><span class="s2">"y, yy"</span><span class="p">,</span><span class="w"> </span><span class="s2">"zzz"</span><span class="p">]</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span></code></pre>
+              </div>
+            </li>
+            <li>
+              <p>A double-quote appearing inside a field MUST be escaped by preceding it with
+                another double quote, and the field itself MUST be enclosed in double quotes.</p>
+              <p>CSV:</p>
+              <pre><code class="language-csv">aaa,"b""bb",ccc¬
+</code></pre>
+              <p>JSON:</p>
+              <div class="language-json highlighter-rouge">
+                <pre class="highlight"><code><span class="p">[</span><span class="w"> </span><span class="p">[</span><span class="s2">"aaa"</span><span class="p">,</span><span class="w"> </span><span class="s2">"b\"bb"</span><span class="p">,</span><span class="w"> </span><span class="s2">"ccc"</span><span class="p">]</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span></code></pre>
+              </div>
+            </li>
+            <li>
+              <p>When a field enclosed in double quotes has spaces before and/or after the
+                double quotes, the spaces MUST be ignored, as the field starts and ends with
+                the double quotes. However this is considered invalid formatting and the CSV
+                parser SHOULD report some form of warning message.</p>
+              <p>CSV:</p>
+              <pre><code class="language-csv">aaa,bbb,ccc¬
+xxx,  "y, yy" ,zzz¬
+</code></pre>
+              <p>JSON:</p>
+              <div class="language-json highlighter-rouge">
+                <pre class="highlight"><code><span class="p">[</span><span class="w"> </span><span class="p">[</span><span class="s2">"aaa"</span><span class="p">,</span><span class="w"> </span><span class="s2">"bbb"</span><span class="p">,</span><span class="w"> </span><span class="s2">"ccc"</span><span class="p">],</span><span class="w">
+  </span><span class="p">[</span><span class="s2">"xxx"</span><span class="p">,</span><span class="w"> </span><span class="s2">"y, yy"</span><span class="p">,</span><span class="w"> </span><span class="s2">"zzz"</span><span class="p">]</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span></code></pre>
+              </div>
+            </li>
+            <li>
+              <p>It is possible to enclose every field in double quotes even if they don’t
+                need to be enclosed. However it is RECOMMENDED to only enclose fields in
+                double quotes that requires it.</p>
+              <p>CSV:</p>
+              <pre><code class="language-csv">"aaa","bbb","ccc"¬
+"xxx",yyy,zzz¬
+</code></pre>
+              <p>JSON:</p>
+              <div class="language-json highlighter-rouge">
+                <pre class="highlight"><code><span class="p">[</span><span class="w"> </span><span class="p">[</span><span class="s2">"aaa"</span><span class="p">,</span><span class="w"> </span><span class="s2">"bbb"</span><span class="p">,</span><span class="w"> </span><span class="s2">"ccc"</span><span class="p">],</span><span class="w">
+  </span><span class="p">[</span><span class="s2">"xxx"</span><span class="p">,</span><span class="w"> </span><span class="s2">"yyy"</span><span class="p">,</span><span class="w"> </span><span class="s2">"zzz"</span><span class="p">]</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span></code></pre>
+              </div>
+            </li>
+            <li>
+              <p>All fields are always strings. CSV itself does not support type casting to
+                integers, floats, booleans, or anything else. It is not a CSV library’s
+                responsibility to type cast input CSV data.</p>
+              <p>If type casting is required, it is up to the developer using a specific CSV
+                library to ensure types are correctly dealt with.</p>
+              <p>Input JSON:</p>
+              <div class="language-json highlighter-rouge">
+                <pre class="highlight"><code><span class="p">[</span><span class="w"> </span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="mf">0.3</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="s2">"aaa"</span><span class="p">],</span><span class="w">
+  </span><span class="p">[</span><span class="mi">11</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="mf">2.13</span><span class="p">,</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w"> </span><span class="s2">"bbb"</span><span class="p">]</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span></code></pre>
+              </div>
+              <p>Output CSV:</p>
+              <pre><code class="language-csv">10,true,0.3,,aaa¬
+11,false,2.13,,bbb¬
+</code></pre>
+              <p>Output CSV parsed back to JSON:</p>
+              <div class="language-json highlighter-rouge">
+                <pre class="highlight"><code><span class="p">[</span><span class="w"> </span><span class="p">[</span><span class="s2">"10"</span><span class="p">,</span><span class="w"> </span><span class="s2">"true"</span><span class="p">,</span><span class="w"> </span><span class="s2">"0.3"</span><span class="p">,</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w"> </span><span class="s2">"aaa"</span><span class="p">],</span><span class="w">
+  </span><span class="p">[</span><span class="s2">"11"</span><span class="p">,</span><span class="w"> </span><span class="s2">"false"</span><span class="p">,</span><span class="w"> </span><span class="s2">"2.13"</span><span class="p">,</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w"> </span><span class="s2">"bbb"</span><span class="p">]</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span></code></pre>
+              </div>
+              <p>At this point it is up to the developer themselves to type cast the above
+                output data from the CSV parser.</p>
+            </li>
+            <li>However, when rendering type cast input data to CSV text, non-string types
+              MUST be converted to a string in such a way that minimal information is
+              lost.
+              <ul>
+                <li>Integers and floats MUST be rendered as a string version of themselves.</li>
+                <li>Booleans <code class="highlighter-rouge">true</code> and <code class="highlighter-rouge">false</code> MUST be rendered as <code class="highlighter-rouge">true</code> and <code class="highlighter-rouge">false</code>
+                  strings, not as <code class="highlighter-rouge">1</code> or <code class="highlighter-rouge">0</code> numbers. If numbers are used the resulting
+                  CSV data is indistinguishable from actual integer numbers.</li>
+                <li><code class="highlighter-rouge">Null</code>/<code class="highlighter-rouge">nil</code> values MUST be rendered as empty strings.</li>
+              </ul>
+            </li>
+            <li>When parsing input CSV data all forms of line breaks (CRLF, LF, and CR) MUST
+              be supported.</li>
+            <li>When rendering output CSV data, CRLF MUST be used for line breaks to ensure
+              maximum cross-platform compatibility.</li>
+          </ol>
+          <h2 id="about">About</h2>
+          <p>This CSV specification is authored by <a href="https://jimeh.me/">Jim Myhrberg</a>.</p>
+          <p>If you’d like to leave feedback,
+            please <a href="https://github.com/parsecsv/csv-spec/issues">open an issue on GitHub</a>.</p>
+          <h2 id="license">License</h2>
+          <p><a href="http://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0 Universal</a></p>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript" src="/assets/main-870855580c69dec57be4c965d0cf8afe78afa6b7b6f6bdb5aff91ac0256c0a1a.js"></script>
+  </body>
+</html>
