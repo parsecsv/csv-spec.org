@@ -7,8 +7,9 @@ hostname: csv-spec.org
 url: https://csv-spec.org
 repo_url: https://github.com/parsecsv/csv-spec
 
-current_version: 0.9.0-draft.1
+current_version: 0.9.0-draft.2
 versions:
+  - 0.9.0-draft.2
   - 0.9.0-draft.1
 
 exclude:
